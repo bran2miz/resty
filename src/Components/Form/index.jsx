@@ -1,33 +1,77 @@
 import React from 'react';
-
+import {useState} from 'react';
 import './Form.scss';
 
 const Form = (props)=> {
 
-  function handleSubmit (e){
+  const [formData, setFormData] = useState({
+    method: 'GET',
+    url: '',
+    body: '',
+  });
+
+  // const [isLoading, setIsLoading] = useState(false);
+
+  // const handleClick = (e) => {
+  //   const {name, value} = e.target;
+
+  //   setFormData({
+  //     ...formData,
+  //     [name]: value,
+  //   })
+  // }
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = {
-      method:"GET",
-      url: "https://pokeapi.co/api/v2/pokemon",
-    };
+    // const formData = {
+    //   method:"GET",
+    //   url: "https://pokeapi.co/api/v2/pokemon",
+    // };
+
+    // call the handleApiCall function that passing inthe formData (object to the newState in App.jsx)
     props.handleApiCall(formData);
   }
 
+  const handleFormInput = (e) => {
+    //what was set previously is the ...formData
+    const {name, value} = e.target;
+    // (when its a variable you have to use square bracket notation) and set the name to whatever the value is. 
+    setFormData({...formData, [name]: value})
+  }
 
+  const handleButtonClick = (e) => {
+    setFormData({...formData, method: e.target.id.toUpperCase() });
+  };
     return (
       <>
         <form onSubmit={handleSubmit}>
           <label >
             <span>URL: </span>
-            <input name='url' type='text' />
+            <input 
+            name='url' 
+            type='text' 
+            value={formData.url} 
+            onChange={handleFormInput} />
             <button type="submit">GO!</button>
           </label>
           <label className="methods">
-            <span id="get">GET</span>
-            <span id="post">POST</span>
-            <span id="put">PUT</span>
-            <span id="delete">DELETE</span>
+            <button id="get" type="button" onClick={handleButtonClick}>GET</button>
+            <button id="post" type="button" onClick={handleButtonClick}>POST</button>
+            <button id="put" type="button" onClick={handleButtonClick}>PUT</button>
+            <button id="delete" type="button" onClick={handleButtonClick}>DELETE</button>
           </label>
+          {/* whatever is on the left is true to move to the right */}
+          {["PUT", "POST"].includes(formData.method) && 
+          <textarea 
+            value={formData.body} 
+            rows={10} 
+            onChange={handleFormInput}
+            name='body'
+            />}
+          {/* other way of doing this below: v v v */}
+          {/* {(formData.method === "POST" || formData.method === "PUT") && <textarea />} */}
+          {/* {myArray.length && {"BAD"}};
+          {myArray.length >0 && {"GOOD"}}; */}
         </form>
       </>
     );
