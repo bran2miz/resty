@@ -47,7 +47,7 @@ const App = () => {
       const url = newState.requestParams.url
 
       const method = newState.requestParams.method
-
+      console.log(url, method)
       // make a dummy request
       const request = {
         count: 2,

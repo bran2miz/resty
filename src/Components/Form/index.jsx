@@ -49,7 +49,8 @@ const Form = (props)=> {
             <span>URL: </span>
             <input 
             name='url' 
-            type='text' 
+            type='text'
+            data-testid="formInput" 
             value={formData.url} 
             onChange={handleFormInput} 
             style={{
@@ -58,7 +59,7 @@ const Form = (props)=> {
               borderRadius: '5px'
             }}
             />
-            <button style={{color: "black", background:'ivory', borderRadius: '5px', cursor: 'pointer'}} type="submit">GO!</button>
+            <button data-testid="goButton" style={{color: "black", background:'ivory', borderRadius: '5px', cursor: 'pointer'}} type="submit">GO!</button>
           </label>
           <label className="methods">
             <button className="method"id="get" type="button" onClick={handleButtonClick}>GET</button>
