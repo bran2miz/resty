@@ -19,5 +19,24 @@ test("test input field for url", async ()=> {
     await waitFor(()=> {
         expect(screen.queryByText(testValue)).toBeInTheDocument();
         expect(screen.queryByText(badTest)).not.toBeInTheDocument();
-    })
-})
+    });
+});
+
+test("Test input field for text area", async()=> {
+    render(<App />);
+
+    const mockText = 'hello world';
+    const goButton = screen.getByTestId("goButton");
+
+    fireEvent.click(screen.getByText("PUT"));
+
+    const inputText = screen.getByTestId('inputText');
+
+    fireEvent.change(inputText, {target: {value: mockText}} );
+    fireEvent.submit(goButton);
+    const testValue = `${mockText}`;
+    await screen.findByText(testValue);
+    await waitFor(()=> {
+        expect(screen.queryByText(testValue)).toBeInTheDocument();
+    });
+});

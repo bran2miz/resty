@@ -44,7 +44,7 @@ const Form = (props)=> {
   };
     return (
       <>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} style={{textAlign: 'center'}}>
           <label >
             <span>URL: </span>
             <input 
@@ -70,6 +70,7 @@ const Form = (props)=> {
           {/* whatever is on the left is true to move to the right */}
           {["PUT", "POST"].includes(formData.method) && 
           <textarea 
+          data-testid='inputText'
             value={formData.body}
             style={{
               marginTop: '10px',
@@ -80,6 +81,7 @@ const Form = (props)=> {
             rows={10} 
             onChange={handleFormInput}
             name='body'
+            
             />}
           {/* other way of doing this below: v v v */}
           {/* {(formData.method === "POST" || formData.method === "PUT") && <textarea />} */}

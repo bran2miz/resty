@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import axios from 'axios';
 
 import './App.scss';
 
@@ -15,7 +15,7 @@ import Results from './Components/Results';
 const App = () => {
   // const [loader, setLoader] = useState(false)
   const [newState, setState] = useState({
-    data: null,
+    data: {},
     requestParams: {}
   });
   // useState is a special function that can accept an argument
@@ -40,7 +40,7 @@ const App = () => {
 
     // if data return newState.
     // early exit gate
-    if (newState.data && Object.keys(newState.data)) return;
+    if (newState.data && Object.keys(newState.data).length) return;
     // run this function only if I don't have data...:
     (async () => {
       // make the request
@@ -49,14 +49,20 @@ const App = () => {
       const method = newState.requestParams.method
       console.log(url, method)
       // make a dummy request
-      const request = {
-        count: 2,
-        results: [
-          { name: "fake thing 1", url: "http://fakethings.com/1" },
-          { name: "fake thing 2", url: "http://fakethings.com/2" },
-        ],
-      };
+      // const request = {
+      //   count: 2,
+      //   results: [
+      //     { name: "fake thing 1", url: "http://fakethings.com/1" },
+      //     { name: "fake thing 2", url: "http://fakethings.com/2" },
+      //   ],
+      // };
+
+      
       // make the request, get back data
+      const {data} = await axios.get(newState.requestParams.url);
+
+
+
       // ...newState is a spread operator
       // takes the object and spreads it apart
       // {data, requestParams}
@@ -66,7 +72,7 @@ const App = () => {
 
       // new value of data will be an empty object or the things back from the request you make
 
-      setState({ ...newState, data: request.data })
+      setState({ ...newState, data })
 
       // be very careful that you don't create a circular dependency where the state of the the thing you are watching changes every time the function runs
     })();
@@ -100,7 +106,9 @@ const App = () => {
       <div>URL: {newState.requestParams.url}</div>
       {newState.requestParams.body && <div>Body: {newState.requestParams.body}</div>}
       <Form handleApiCall={callApi} />
-      <Results data={newState.data} />
+      {/* {<Results data={newState.data} />} */}
+      {Object.keys(newState.data).length > 0 && <Results data={newState.data} />}        
+
       <Footer />
     </>
   );
