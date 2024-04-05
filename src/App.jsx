@@ -13,13 +13,16 @@ import Form from './Components/Form';
 import Results from './Components/Results';
 
 const App = () => {
+  // const [loader, setLoader] = useState(false)
   const [newState, setState] = useState({
     data: null,
     requestParams: {}
   });
+// useState is a special function that can accept an argument
+// the argument represents the starting value of the state
+// returns an array of a getter and setter
 
-
-  const callApi = () => {
+  const callApi = (requestParams) => {
     // mock output
     const data = {
       count: 2,
@@ -28,7 +31,9 @@ const App = () => {
         {name: "fake thing 2", url: "http://fakethings.com/2"},
       ],
     };
-    setState({...newState, data})
+    // setting form data as requestParams
+    //setState of requestParams (an empty object) to formData which is object with keys of method, url, and reqBody. 
+    setState({data, requestParams})
   }
 
 
@@ -36,7 +41,9 @@ const App = () => {
      <>
         <Header />
         <div>Request Method: {newState.requestParams.method}</div>
+{/* use the newState which is the state object, the requestParams which the empty object that now has the formData, and grab the url key to render the url value from the form */}
         <div>URL: {newState.requestParams.url}</div>
+        {newState.requestParams.body && <div>Body: {newState.requestParams.body}</div>}
         <Form handleApiCall={callApi} />
         <Results data={newState.data} />
         <Footer />
