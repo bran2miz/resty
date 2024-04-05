@@ -44,29 +44,44 @@ const Form = (props)=> {
   };
     return (
       <>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} style={{textAlign: 'center'}}>
           <label >
             <span>URL: </span>
             <input 
             name='url' 
-            type='text' 
+            type='text'
+            data-testid="formInput" 
             value={formData.url} 
-            onChange={handleFormInput} />
-            <button type="submit">GO!</button>
+            onChange={handleFormInput} 
+            style={{
+              marginRight: '10px',
+              padding: '10px',
+              borderRadius: '5px'
+            }}
+            />
+            <button data-testid="goButton" style={{color: "black", background:'ivory', borderRadius: '5px', cursor: 'pointer'}} type="submit">GO!</button>
           </label>
           <label className="methods">
-            <button id="get" type="button" onClick={handleButtonClick}>GET</button>
-            <button id="post" type="button" onClick={handleButtonClick}>POST</button>
-            <button id="put" type="button" onClick={handleButtonClick}>PUT</button>
-            <button id="delete" type="button" onClick={handleButtonClick}>DELETE</button>
+            <button className="method"id="get" type="button" onClick={handleButtonClick}>GET</button>
+            <button className="method"id="post" type="button" onClick={handleButtonClick}>POST</button>
+            <button className="method"id="put" type="button" onClick={handleButtonClick}>PUT</button>
+            <button className="method"id="delete" type="button" onClick={handleButtonClick}>DELETE</button>
           </label>
           {/* whatever is on the left is true to move to the right */}
           {["PUT", "POST"].includes(formData.method) && 
           <textarea 
-            value={formData.body} 
+          data-testid='inputText'
+            value={formData.body}
+            style={{
+              marginTop: '10px',
+              padding: '5px',
+              borderRadius: '5px',
+              display: 'flex',
+            }} 
             rows={10} 
             onChange={handleFormInput}
             name='body'
+            
             />}
           {/* other way of doing this below: v v v */}
           {/* {(formData.method === "POST" || formData.method === "PUT") && <textarea />} */}
