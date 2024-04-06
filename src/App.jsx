@@ -11,6 +11,7 @@ import Header from './Components/Header';
 import Footer from './Components/Footer';
 import Form from './Components/Form';
 import Results from './Components/Results';
+import TestComponent from './Components/TestComponent';
 
 const App = () => {
   // const [loader, setLoader] = useState(false)
@@ -99,7 +100,7 @@ const App = () => {
 
 
   return (
-    <>
+    <React.Fragment>
       <Header />
       <div>Request Method: {newState.requestParams.method}</div>
       {/* use the newState which is the state object, the requestParams which the empty object that now has the formData, and grab the url key to render the url value from the form */}
@@ -108,9 +109,9 @@ const App = () => {
       <Form handleApiCall={callApi} />
       {/* {<Results data={newState.data} />} */}
       {Object.keys(newState.data).length > 0 && <Results data={newState.data} />}        
-
       <Footer />
-    </>
+      <TestComponent />
+    </React.Fragment>
   );
 
 }

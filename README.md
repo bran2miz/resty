@@ -71,3 +71,8 @@ rafce - react arrow function export component (auto creates a function based com
     setState({data: {}, requestParams})
   }
 
+# Lab 29
+
+useReducer
+useMemo
+useCallback
