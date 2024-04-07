@@ -25,6 +25,7 @@ const reducerFunction = (state, action) => {
     // add results (which updates data and pushes a new history item)
     // add params (called from the callAPI function and adds the form data)
     switch (action.type) {
+      // inside a switch you make your cases (if the value of the switch)
         case 'SET_REQUEST_PARAMS':
             return {...state, requestParams:action.data, data:{}, loading:true};
         case 'SET_DATA':
@@ -37,6 +38,8 @@ const reducerFunction = (state, action) => {
 
 // update the appState to use useReducer, add history as a property
 const App = () => {
+    //dispatch in redux; fire off a function that is going to run code to update state
+    //useReducer takes in a reducer function and an initial value in state
     const [appState, dispatch] = useReducer(reducerFunction, initialState);
 
     // right here we will dipatch updating data, and we will add a record to history (addResult)

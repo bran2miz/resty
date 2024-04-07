@@ -39,13 +39,11 @@ const Form = (props)=> {
     setFormData({...formData, [name]: value})
   }
 
-  const handleTextArea = (e) => {
-    setFormData({...formData, body: e.target.value})
-  }
-
   const handleButtonClick = (e) => {
     setFormData({...formData, method: e.target.id.toUpperCase() });
   };
+
+  console.log(formData.body)
     return (
       <>
         <form onSubmit={handleSubmit} style={{textAlign: 'center'}}>

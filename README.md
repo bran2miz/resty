@@ -73,6 +73,33 @@ rafce - react arrow function export component (auto creates a function based com
 
 # Lab 29
 
-useReducer
-useMemo
-useCallback
+Technical Requirements / Note
+
+Refactor your state management within the App component to use the useReducer() hook.
+
+Replace any component state managements to use derived state from useReducer() with a reducer function and initial state. Suggested approach:
+
+: Use a reducer to store and manage all application state: loading, results, history. Add to history array in state after every api call method, url, results (json).
+
+: Iterates the history array in state and shows the previous API calls. When one is clicked on, show the results in the results component. Note: the results component renders whatever is in state.
+
+Reminder:
+
+- CORS policy is enforced by web browsers to prevent web pages from making requests to a different domain than the one that served the page.
+
+- When you make a request using Axios to a different domain, the server hosting that domain needs to include the appropriate CORS headers in its response to allow your frontend application to access the requested resource.
+
+- When you make a request using axios.get to appState.requestParams.url, if the server doesn't include the Access-Control-Allow-Origin header in its response with the appropriate value (e.g., allowing requests from http://localhost:5173), the browser blocks the request due to CORS policy.
+
+- Alternatively, for testing and development purposes, you can use a mock response or a dummy request (ie mock object like the one in the useEffect()).This allows you to continue developing and testing your frontend application without being blocked by CORS policy.
+
+
+Circular dependencies
+
+- Circular dependencies can occur in JavaScript when two or more modules depend on each other directly or indirectly. Try to avoid a circular dependency between your useEffect and the module containing appState and dispatch.
+
+In React, useEffect allows you to perform side effects in function components. However, it's crucial to understand that when useEffect dependencies are passed as an array, the effect runs after every render if any of the dependencies have changed.
+
+By putting the condition if(appState.loading === true && appState.requestParams.method && appState.requestParams.url) at the beginning of your useEffect, it will ensure that the effect will only run when these conditions are met.
+
+The cleanup function that happens after the async function will be called when the component unmounts. This is useful for cleaning up resources such as subscriptions or timers to avoid memory leaks.
