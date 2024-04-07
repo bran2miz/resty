@@ -9,7 +9,7 @@ const Form = (props)=> {
     url: '',
     body: '',
   });
-
+  
   // const [isLoading, setIsLoading] = useState(false);
 
   // const handleClick = (e) => {
@@ -37,6 +37,10 @@ const Form = (props)=> {
     const {name, value} = e.target;
     // (when its a variable you have to use square bracket notation) and set the name to whatever the value is. 
     setFormData({...formData, [name]: value})
+  }
+
+  const handleTextArea = (e) => {
+    setFormData({...formData, body: e.target.value})
   }
 
   const handleButtonClick = (e) => {

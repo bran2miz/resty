@@ -1,119 +1,136 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import axios from 'axios';
-
 import './App.scss';
-
-// Let's talk about using index.js and some other name in the component folder.
-// There's pros and cons for each way of doing this...
-// OFFICIALLY, we have chosen to use the Airbnb style guide naming convention. 
-// Why is this source of truth beneficial when spread across a global organization?
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 import Form from './Components/Form';
 import Results from './Components/Results';
-import TestComponent from './Components/TestComponent';
+// import TestComponent from './Components/TestComponent';
+import History from './Components/History';
 
-const App = () => {
-  // const [loader, setLoader] = useState(false)
-  const [newState, setState] = useState({
+
+const initialState = {
     data: {},
-    requestParams: {}
-  });
-  // useState is a special function that can accept an argument
-  // the argument represents the starting value of the state
-  // returns an array of a getter and setter
+    requestParams: {},
+    history: [],
+    loading: true
+}
+// inside of history this is what each object would look like: history: [
+//                url: "something",
+//                method: 'GET',
+//                results: ''
+//             ]
+
+const reducerFunction = (state, action) => {
+    // add results (which updates data and pushes a new history item)
+    // add params (called from the callAPI function and adds the form data)
+    switch (action.type) {
+        case 'SET_REQUEST_PARAMS':
+            return {...state, requestParams:action.data, data:{}, loading:true};
+        case 'SET_DATA':
+            return {...state, data: action.data, loading:false, history:[...state.history,action.history]};
+        default:
+            return state;
+    }   
+    }
+ 
+
+// update the appState to use useReducer, add history as a property
+const App = () => {
+    const [appState, dispatch] = useReducer(reducerFunction, initialState);
+
+    // right here we will dipatch updating data, and we will add a record to history (addResult)
+    //history: [{url: "something", method: 'GET', results:''}]
+    const callApi = async (requestParams) => {
+        console.log(requestParams)
+        const action = {
+            type: 'SET_REQUEST_PARAMS',
+            data:requestParams
+        }
+        dispatch(action)
+    }
 
 
-  // listen for the state (newState.requestParams) when it changes (url and method, maybe body)
-  // when they change, make a http request 
-  // update the DATA (appState.data) to the new values. 
 
-
-  // use a useEffect to do this
-  //OPTION 1 (option 2 in README.md)
-  useEffect(() => {
+    useEffect(()=> {
     // console.log('this is a callback function');
     // can do anything
-    // use wrap the async function in parenthesis so that it turns it into an anonymous function
 
-    // if there isn't a url, don't run this and return to the callback.
-    if (!newState.requestParams.url) return;
+   
+    
+    // if (appState.loading && !appState.requestParams.url) return;
+   
+    // // if data return newState.
+    // // early exit gate
+    
+    // if (appState.loading && appState.data && Object.keys(appState.data).length) return;
 
-    // if data return newState.
-    // early exit gate
-    if (newState.data && Object.keys(newState.data).length) return;
-    // run this function only if I don't have data...:
+     // if there isn't a url, there isn't a method and it isn't loading don't run this and return to the callback.
+    if(appState.loading === true && appState.requestParams.method && appState.requestParams.url) {
+    // wrap the async function in parenthesis so that it turns it into an anonymous function
     (async () => {
-      // make the request
-      const url = newState.requestParams.url
+        // make the request
+        // console.log("this is new state", newState);
 
-      const method = newState.requestParams.method
-      console.log(url, method)
-      // make a dummy request
-      // const request = {
-      //   count: 2,
-      //   results: [
-      //     { name: "fake thing 1", url: "http://fakethings.com/1" },
-      //     { name: "fake thing 2", url: "http://fakethings.com/2" },
-      //   ],
-      // };
+        //this is to use it for an actual website, in which you have access to do CRUD stuff with CORS policy
+        // const responseData = await axios.get(appState.requestParams.url);
+        // console.log(responseData);
+        
+        const url = appState.requestParams.url
+  
+        const method = appState.requestParams.method
+        console.log(url, method);
 
-      
-      // make the request, get back data
-      const {data} = await axios.get(newState.requestParams.url);
+        // this is the mock request that you add to see if you are retreiving the history and the fake data when you do CRUD stuff. 
+        const request = {
+            data: {
+              count: 2,
+              results: [
+                { name: "fake thing 1", url: "http://fakethings.com/1" },
+                { name: "fake thing 2", url: "http://fakethings.com/2" },
+              ],
+            },
+          };
+        
+        // console.log(responseData)
+        
+        // could add an uuid on the responseData so that in your History.jsx you aren't assigning your key with just the idx.
+        const historyObj = {url:url, method:method, data:request.data }
 
+        const action = {
+            type: "SET_DATA",
+            data: request.data,
+            history: historyObj
+        }
 
-
-      // ...newState is a spread operator
-      // takes the object and spreads it apart
-      // {data, requestParams}
-      // {...newState, pizza: "yum"}
-      // newState is now {data, requestParams, pizza: "yum"}
-      // {data: {fjfjfje:}, requestParams: {url: "yaya", method: "GET"}, data {}}
-
-      // new value of data will be an empty object or the things back from the request you make
-
-      setState({ ...newState, data })
-
-      // be very careful that you don't create a circular dependency where the state of the the thing you are watching changes every time the function runs
+        dispatch(action);
+        
     })();
-    return () => {
-      console.log('component unmounts');
+        return() => {
+            console.log('component unmounts');
+        }
     }
-  }, [newState])
+    }, [appState])
+    
 
-  const callApi = (requestParams) => {
-    // mock output
-    // const data = {
-    //   count: 2,
-    //   results: [
-    //     {name: "fake thing 1", url: "http://fakethings.com/1"},
-    //     {name: "fake thing 2", url: "http://fakethings.com/2"},
-    //   ],
-    // };
-    // setting form data as requestParams
-    //setState of requestParams (an empty object) to formData which is object with keys of method, url, and reqBody. 
-    setState({ data: {}, requestParams })
-  }
-
-
-
-
-  return (
-    <React.Fragment>
-      <Header />
-      <div>Request Method: {newState.requestParams.method}</div>
-      {/* use the newState which is the state object, the requestParams which the empty object that now has the formData, and grab the url key to render the url value from the form */}
-      <div>URL: {newState.requestParams.url}</div>
-      {newState.requestParams.body && <div>Body: {newState.requestParams.body}</div>}
-      <Form handleApiCall={callApi} />
-      {/* {<Results data={newState.data} />} */}
-      {Object.keys(newState.data).length > 0 && <Results data={newState.data} />}        
-      <Footer />
-      <TestComponent />
-    </React.Fragment>
-  );
-
+    // addParams
+    return (
+        <React.Fragment>
+          <Header />
+          <div>Request Method: {appState.requestParams.method}</div>
+          {/* use the appState which is the state object, the requestParams which the empty object that now has the formData, and grab the url key to render the url value from the form */}
+          <div>URL: {appState.requestParams.url}</div>
+          {appState.requestParams.body && <div>Body: {appState.requestParams.body}</div>}
+          <Form handleApiCall={callApi} />
+          {/* {<Results data={appState.data} />} */}
+          {/* {Object.keys(appState.data).length > 0 && <Results data={appState.data} />}  */}
+        <main>
+          <Results data={appState.data} />
+          <History history={appState.history} 
+          />    
+        </main>   
+          <Footer />
+        </React.Fragment>
+      );
 }
-
 export default App;
